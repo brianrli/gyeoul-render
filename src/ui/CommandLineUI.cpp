@@ -30,6 +30,7 @@ CommandLineUI::CommandLineUI( int argc, char** argv )
 	int i;
 
 	progName=argv[0];
+	// std::cout << progName << "\n";
 
 	while( (i = getopt( argc, argv, "tr:w:h:" )) != EOF )
 	{
@@ -50,14 +51,20 @@ CommandLineUI::CommandLineUI( int argc, char** argv )
 		}
 	}
 
+	// std::cout << optind << " " << argc << "\n";
 	if( optind >= argc-1 )
 	{
 		std::cerr << "no input and/or output name." << std::endl;
 		exit(1);
 	}
 
-	rayName = argv[optind];
-	imgName = argv[optind+1];
+	//old
+	// rayName = argv[optind];
+	// imgName = argv[optind+1];
+
+	//new
+	rayName = argv[optind+1];
+	imgName = argv[optind+2];
 }
 
 int CommandLineUI::run()

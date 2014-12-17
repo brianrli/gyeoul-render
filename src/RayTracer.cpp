@@ -1,7 +1,4 @@
 // The main ray tracer.
-
-
-
 #include "RayTracer.h"
 #include "scene/light.h"
 #include "scene/material.h"

@@ -13,6 +13,9 @@ bool Cone::intersectLocal( const ray& r, isect& i ) const
 	
 	Vec3d R0 = r.getPosition();
 	Vec3d Rd = r.getDirection();
+
+	// std::cout << "ray position: " <<R0[0] << " " << R0[1] << " " << R0[2] << "\n";
+	// std::cout << "ray direction: " <<Rd[0] << " " << Rd[1] << " " << Rd[2] << "\n";
 	double pz = R0[2];
 	double dz = Rd[2];
 	

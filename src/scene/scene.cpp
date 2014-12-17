@@ -78,6 +78,10 @@ bool BoundingBox::intersect(const ray& r, double& tMin, double& tMax) const
 
 bool Geometry::intersect(const ray&r, isect&i) const
 {
+	//test
+	// Vec3d s1 = transform->globalToLocalCoords(Vec3d( 0.0, 0.0, 1.0 ));
+	// std::cout << s1[0] << " " << s1[1] << " " << s1[2] << "\n";
+    
     // Transform the ray into the object's local coordinate space
     Vec3d pos = transform->globalToLocalCoords(r.getPosition());
     Vec3d dir = transform->globalToLocalCoords(r.getPosition() + r.getDirection()) - pos;
