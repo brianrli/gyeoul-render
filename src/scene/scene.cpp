@@ -92,7 +92,9 @@ bool Geometry::intersect(const ray&r, isect&i) const
 
     if (intersectLocal(localRay, i)) {
         // Transform the intersection point & normal returned back into global space.
+        std::cout << "transform normal\n";
 		i.N = transform->localToGlobalCoordsNormal(i.N);
+		std::cout << "divide by length\n";
 		i.t /= length;
 
 		return true;
