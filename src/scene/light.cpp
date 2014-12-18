@@ -3,6 +3,7 @@
 #include "light.h"
 
 using namespace std;
+bool debugLights = false;
 
 double DirectionalLight::distanceAttenuation( const Vec3d& P ) const
 {
@@ -14,7 +15,19 @@ double DirectionalLight::distanceAttenuation( const Vec3d& P ) const
 Vec3d DirectionalLight::shadowAttenuation( const Vec3d& P ) const
 {
     // YOUR CODE HERE:
-    // You should implement shadow-handling code here.
+    isect i;
+	ray shadow_r(P, orientation, ray::SHADOW);
+	
+	if(debugLights){
+		std::cout << "Ray Details:\n";
+		P.print();
+		orientation.print();
+	}
+
+	if (scene->intersect(shadow_r,i)){
+		return Vec3d(0,0,0);
+	}
+	
     return Vec3d(1,1,1);
 }
 
@@ -56,6 +69,18 @@ Vec3d PointLight::getDirection( const Vec3d& P ) const
 Vec3d PointLight::shadowAttenuation(const Vec3d& P) const
 {
     // YOUR CODE HERE:
-    // You should implement shadow-handling code here.
+	isect i;
+
+	Vec3d direction = position-P;
+	direction.normalize();
+	ray shadow_r(P, direction, ray::SHADOW);
+	std::cout << "Ray Details:\n";
+	P.print();
+	direction.print();
+
+	if (scene->intersect(shadow_r,i)){
+		return Vec3d(0,0,0);
+	}
+
     return Vec3d(1,1,1);
 }

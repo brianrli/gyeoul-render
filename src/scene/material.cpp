@@ -1,6 +1,7 @@
 #include "ray.h"
 #include "material.h"
 #include "light.h"
+// #include <vector>
 
 #include "../fileio/bitmap.h"
 
@@ -25,21 +26,41 @@ Vec3d Material::shade( Scene *scene, const ray& r, const isect& i ) const
 	if( debugMode )
 		std::cout << "Debugging Phong code..." << std::endl;
 
-	// When you're iterating through the lights,
-	// you'll want to use code that looks something
-	// like this:
-	//
-	// for ( vector<Light*>::const_iterator litr = scene->beginLights(); 
-	// 		litr != scene->endLights(); 
-	// 		++litr )
-	// {
-	// 		Light* pLight = *litr;
-	// 		.
-	// 		.
-	// 		.
-	// }
+    //Intersection Point
+    Vec3d P = r.at(i.t);
+    Vec3d L = Vec3d(0,0,0);
+
+    //iterate through lights
+    for ( std::vector<Light*>::const_iterator litr = scene->beginLights(); 
+         litr != scene->endLights(); 
+         ++litr )
+    {
+        Light* pLight = *litr;
+        Vec3d sa = pLight->shadowAttenuation(P);
+
+        //unobstructed
+        if(sa[0]){
+            Vec3d color = pLight->getColor(P);
+            Vec3d direction = pLight->getDirection(P);
+            Vec3d normal = i.N;
+
+            std::cout << "color: ";
+            color.print();
+            std::cout << "direction: ";
+            direction.print();
+            std::cout << "normal: ";
+            normal.print();
+            kd(i).print();
+            std::cout <<"swag ";
+            std::cout << (normal*direction)*kd(i) << "\n";
+
+            L += kd(i)*(normal*direction)*color;
+        }
+    }
 	
-	return kd(i);
+    std::cout <<"L: ";
+    L.print();
+	return L;
 }
 
 

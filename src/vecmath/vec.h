@@ -280,6 +280,10 @@ public:
 	void glColor()  { glColor3d(n[0], n[1], n[2]); }
 	void glVertex()  { glVertex3d(n[0], n[1], n[2]); }
 	void glNormal()  { glNormal3d(n[0], n[1], n[2]); }
+
+	//--[ Print Methods ]------------------------
+	void print() const {std::cout << n[0] << " " << n[1] << " " << n[2] << "\n";}
+
 };
 
 typedef Vec3<int> Vec3i;

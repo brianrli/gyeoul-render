@@ -75,9 +75,9 @@ bool TrimeshFace::intersectLocal( const ray& r, isect& it ) const
     Vec3d vb = parent->vertices[ids[1]];
     Vec3d vc = parent->vertices[ids[2]];
 
-    std::cout << va << " " << vb << " " << vc << "\n";
+    // std::cout << va << " " << vb << " " << vc << "\n";
     Vec3d normal = (va-vb)^(va-vc);
-    std::cout << normal[0] << " " << normal[1] << " " << normal[2] << "\n";
+    // std::cout << normal[0] << " " << normal[1] << " " << normal[2] << "\n";
 
     double a = va[X]-vb[X];
     double b = va[Y]-vb[Y];
@@ -131,7 +131,7 @@ bool TrimeshFace::intersectLocal( const ray& r, isect& it ) const
     it.setT(t);
     it.obj = this;
 
-	std::cout << "intersect\n"; 
+	// std::cout << "tmesh isect\n"; 
     return true;
 }
 
