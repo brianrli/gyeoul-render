@@ -29,6 +29,18 @@ Vec3d Material::shade( Scene *scene, const ray& r, const isect& i ) const
     //Intersection Point
     Vec3d P = r.at(i.t);
     Vec3d L = Vec3d(0,0,0);
+    Vec3d V = -r.getDirection();
+
+    //======[ Emission ]======
+    L += ke(i);
+    if(debugMode)
+        std::cout << "ke(i): " << ke(i) <<"\n";
+
+    //======[ Ambient ]======
+    //missing Ka
+    L += ka(i);
+    if(debugMode)
+        std::cout << "ka(i): " << ka(i) <<"\n";
 
     //iterate through lights
     for ( std::vector<Light*>::const_iterator litr = scene->beginLights(); 
@@ -40,26 +52,30 @@ Vec3d Material::shade( Scene *scene, const ray& r, const isect& i ) const
 
         //unobstructed
         if(sa[0]){
-            Vec3d color = pLight->getColor(P);
+            double intensity = pLight->distanceAttenuation(P);
+
+            //======[ Diffuse ]======
             Vec3d direction = pLight->getDirection(P);
             Vec3d normal = i.N;
-
-            std::cout << "color: ";
-            color.print();
-            std::cout << "direction: ";
-            direction.print();
-            std::cout << "normal: ";
-            normal.print();
-            kd(i).print();
-            std::cout <<"swag ";
-            std::cout << (normal*direction)*kd(i) << "\n";
-
-            L += kd(i)*(normal*direction)*color;
+            L +=  clamp((normal*direction)*kd(i));
+            
+            //======[ Specular ]======
+            Vec3d H = (V+direction)/2.0;
+            L += clamp(ks(i)*pow((normal*H),shininess(i)));
+            
+            //======[ misc ]======
+            L *= intensity;
+        }
+        else{
+            if(debugMode)
+                std::cout << "light blocked\n";
         }
     }
 	
-    std::cout <<"L: ";
-    L.print();
+    if(debugMode){
+        std::cout <<"L: ";
+        L.print();
+    }
 	return L;
 }
 
