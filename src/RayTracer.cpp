@@ -37,9 +37,23 @@ Vec3d RayTracer::trace( double x, double y )
     ray r( Vec3d(0,0,0), Vec3d(0,0,0), ray::VISIBILITY );
 
     scene->getCamera().rayThrough( x,y,r );
-	Vec3d ret = traceRay( r, Vec3d(1.0,1.0,1.0), 0 );
+	Vec3d ret = traceRay( r, Vec3d(1.0,1.0,1.0), 2);
 	ret.clamp();
 	return ret;
+}
+
+bool refract(Vec3d &D, Vec3d &N, double index, Vec3d &t){
+	//index = n/n_t
+	double a = 1-(pow(index,2)*(1-pow(D*N,2)));
+	
+	if(a<0.0){
+		return false;
+	}
+
+	t = index*(D-(N*(D*N))) - N*(sqrt(a));
+	t.normalize();
+	
+	return true;
 }
 
 // Do recursive ray tracing!  You'll want to insert a lot of code here
@@ -47,7 +61,11 @@ Vec3d RayTracer::trace( double x, double y )
 Vec3d RayTracer::traceRay( const ray& r, 
 	const Vec3d& thresh, int depth )
 {
+	int refl_depth = depth;
+	int refr_depth = depth;
+	
 	isect i;
+	Vec3d I;
 
 	if(scene->intersect( r, i )){
 		// YOUR CODE HERE
@@ -62,8 +80,78 @@ Vec3d RayTracer::traceRay( const ray& r,
 		// rays.
 
 		const Material& m = i.getMaterial();
-		return m.shade(scene, r, i);
-	
+		I = m.shade(scene, r, i);
+		
+		//=====[ Reflection ]=====
+		if(refl_depth!=0){
+			Vec3d d = r.getDirection();
+			
+			//new direction
+			Vec3d refl = d - (2*(d*i.N)*i.N);
+			refl.normalize();
+
+			if(debugMode){
+				std::cout << "reflect direction ";
+				refl.print();
+			}
+			//reflectance ray
+			ray refl_ray(r.at(i.t), refl, ray::REFLECTION);
+			refl_depth--;
+			Vec3d refl_contribution = traceRay(refl_ray,thresh,refl_depth);
+			I = I + prod(m.kr(i),refl_contribution);
+
+			//debugging
+			if(debugMode){
+				std::cout << "kr: ";
+				m.kr(i).print();
+				std::cout << "contribution: ";
+				refl_contribution.print();
+				std::cout << "depth: " << depth << "\n";
+			}
+		}
+
+		//=====[ Refraction ]=====
+		//test if dielectric
+		if(refr_depth!=0){
+			if(m.index(i) > 1.0 || r.type()==ray::REFRACTION){
+
+				//misc
+				bool total_int = false;
+
+				Vec3d N = i.N;
+				Vec3d d = r.getDirection();
+				double n= m.index(i); //interior index (nt)
+				Vec3d a = m.kt(i);
+
+				//new vector declarations
+				Vec3d t = Vec3d(0,0,0);
+
+				// entering material
+				if(d*N < 0){
+					if(refract(d,N,1/n,t)){
+						ray refr_ray(r.at(i.t),t,ray::REFRACTION);
+						refr_depth -= 1;
+						Vec3d refraction = traceRay(refr_ray,thresh,refr_depth);
+						I += prod(m.kt(i),refraction);
+
+					}
+				}
+				// leaving material
+				else{
+					Vec3d b = -N;
+					if(refract(d,b,n,t)){
+						ray refr_ray(r.at(i.t),t,ray::REFRACTION);
+						refr_depth -= 1;
+						Vec3d refraction = traceRay(refr_ray,thresh,refr_depth);
+						I += prod(m.kt(i),refraction);
+					}
+				}
+			}
+		}
+
+
+		//=====[ return radiance ]=====
+		return I;
 	} else {
 		// No intersection.  This ray travels to infinity, so we color
 		// it according to the background color, which in this (simple) case

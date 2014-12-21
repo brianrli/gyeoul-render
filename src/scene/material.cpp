@@ -57,10 +57,20 @@ Vec3d Material::shade( Scene *scene, const ray& r, const isect& i ) const
             //======[ Diffuse ]======
             Vec3d direction = pLight->getDirection(P);
             Vec3d normal = i.N;
+            if(debugMode)
+            {
+                std::cout << "D: ";
+                clamp((normal*direction)*kd(i)).print();   
+            }
             L +=  clamp((normal*direction)*kd(i));
             
             //======[ Specular ]======
             Vec3d H = (V+direction)/2.0;
+            if(debugMode)
+            {
+                std::cout << "S: ";
+                clamp(ks(i)*pow((normal*H),shininess(i))).print();   
+            }
             L += clamp(ks(i)*pow((normal*H),shininess(i)));
             
             //======[ misc ]======
