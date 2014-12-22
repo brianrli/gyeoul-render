@@ -15,20 +15,35 @@ double DirectionalLight::distanceAttenuation( const Vec3d& P ) const
 Vec3d DirectionalLight::shadowAttenuation( const Vec3d& P ) const
 {
     // YOUR CODE HERE:
-    isect i;
-	ray shadow_r(P, -orientation, ray::SHADOW);
+	// should return a color
+	isect i;
+	Vec3d shadow = Vec3d(1,1,1);
+	Vec3d direction = -orientation;
+
+	ray shadow_r(P, direction, ray::SHADOW);
 	
-	if(debugLights){
-		std::cout << "Ray Details:\n";
-		P.print();
-		orientation.print();
+	//std::cout << "Ray Details:\n";
+	//P.print();
+	//direction.print();
+	bool cont = true;
+	bool in = false;
+
+	while (scene->intersect(shadow_r,i)){
+		const Material& m = i.getMaterial();
+		if(!in){
+			shadow = prod(m.kt(i),shadow);
+			in = true;
+		}
+		else
+			in = false;
+	
+		shadow_r = ray(shadow_r.at(i.t),
+		direction,ray::SHADOW);		
 	}
 
-	if (scene->intersect(shadow_r,i)){
-		return Vec3d(0,0,0);
-	}
-	
-    return Vec3d(1,1,1);
+	// std::cout<<"Shadow Contritution: ";
+	// shadow.print();
+    return shadow;
 }
 
 Vec3d DirectionalLight::getColor( const Vec3d& P ) const
@@ -69,7 +84,9 @@ Vec3d PointLight::getDirection( const Vec3d& P ) const
 Vec3d PointLight::shadowAttenuation(const Vec3d& P) const
 {
     // YOUR CODE HERE:
+	// should return a color
 	isect i;
+	Vec3d shadow = Vec3d(1,1,1);
 
 	Vec3d direction = position-P;
 	direction.normalize();
@@ -78,10 +95,23 @@ Vec3d PointLight::shadowAttenuation(const Vec3d& P) const
 	//std::cout << "Ray Details:\n";
 	//P.print();
 	//direction.print();
+	bool cont = true;
+	bool in = false;
 
-	if (scene->intersect(shadow_r,i)){
-		return Vec3d(0,0,0);
+	while (scene->intersect(shadow_r,i)){
+		const Material& m = i.getMaterial();
+		if(!in){
+			shadow = prod(m.kt(i),shadow);
+			in = true;
+		}
+		else
+			in = false;
+	
+		shadow_r = ray(shadow_r.at(i.t),
+		direction,ray::SHADOW);		
 	}
 
-    return Vec3d(1,1,1);
+	// std::cout<<"Shadow Contritution: ";
+	// shadow.print();
+    return shadow;
 }

@@ -47,39 +47,35 @@ Vec3d Material::shade( Scene *scene, const ray& r, const isect& i ) const
          litr != scene->endLights(); 
          ++litr )
     {
+        Vec3d Lc; //light contribution
         Light* pLight = *litr;
         Vec3d sa = pLight->shadowAttenuation(P);
+        double da = pLight->distanceAttenuation(P);
 
-        //unobstructed
-        if(sa[0]){
-            double intensity = pLight->distanceAttenuation(P);
+        //======[ Diffuse ]======
+        Vec3d direction = pLight->getDirection(P);
+        Vec3d normal = i.N;
+        if(debugMode)
+        {
+            std::cout << "D: ";
+            clamp((normal*direction)*kd(i)).print();   
+        }
+        Lc =  clamp((normal*direction)*kd(i));
+        
+        //======[ Specular ]======
+        Vec3d H = (V+direction)/2.0;
+        if(debugMode)
+        {
+            std::cout << "S: ";
+            clamp(ks(i)*pow((normal*H),shininess(i))).print();   
+            std::cout <<"sa: ";
+            sa.print();
+        }
+        Lc += clamp(ks(i)*pow((normal*H),shininess(i)));
 
-            //======[ Diffuse ]======
-            Vec3d direction = pLight->getDirection(P);
-            Vec3d normal = i.N;
-            if(debugMode)
-            {
-                std::cout << "D: ";
-                clamp((normal*direction)*kd(i)).print();   
-            }
-            L +=  clamp((normal*direction)*kd(i));
-            
-            //======[ Specular ]======
-            Vec3d H = (V+direction)/2.0;
-            if(debugMode)
-            {
-                std::cout << "S: ";
-                clamp(ks(i)*pow((normal*H),shininess(i))).print();   
-            }
-            L += clamp(ks(i)*pow((normal*H),shininess(i)));
-            
-            //======[ misc ]======
-            L *= intensity;
-        }
-        else{
-            if(debugMode)
-                std::cout << "light blocked\n";
-        }
+        Lc = da * prod(Lc,sa);
+        
+        L+=Lc;
     }
 	
     if(debugMode){

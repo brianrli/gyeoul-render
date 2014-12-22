@@ -111,8 +111,8 @@ Vec3d RayTracer::traceRay( const ray& r,
 		}
 
 		//=====[ Refraction ]=====
-		//test if dielectric
 		if(refr_depth!=0){
+			//test if dielectric
 			if(m.index(i) > 1.0 || r.type()==ray::REFRACTION){
 
 				//misc
