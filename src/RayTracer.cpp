@@ -16,7 +16,7 @@ extern TraceUI* traceUI;
 #include <iostream>
 #include <fstream>
 #include <stdio.h>
-#include <string.h>
+#include <string.h> 
 
 using namespace std;
 
@@ -37,7 +37,7 @@ Vec3d RayTracer::trace( double x, double y )
     ray r( Vec3d(0,0,0), Vec3d(0,0,0), ray::VISIBILITY );
 
     scene->getCamera().rayThrough( x,y,r );
-	Vec3d ret = traceRay( r, Vec3d(1.0,1.0,1.0), 2);
+	Vec3d ret = traceRay( r, Vec3d(1.0,1.0,1.0), max_depth);
 	ret.clamp();
 	return ret;
 }
@@ -61,6 +61,7 @@ bool refract(Vec3d &D, Vec3d &N, double index, Vec3d &t){
 Vec3d RayTracer::traceRay( const ray& r, 
 	const Vec3d& thresh, int depth )
 {
+	// std::cout << "max depth: " << max_depth << "\n";
 	int refl_depth = depth;
 	int refr_depth = depth;
 	
@@ -162,7 +163,7 @@ Vec3d RayTracer::traceRay( const ray& r,
 }
 
 RayTracer::RayTracer()
-	: scene( 0 ), buffer( 0 ), buffer_width( 256 ), buffer_height( 256 ), m_bBufferReady( false )
+	: max_depth(0), scene( 0 ), buffer( 0 ), buffer_width( 256 ), buffer_height( 256 ), m_bBufferReady( false )
 {
 }
 

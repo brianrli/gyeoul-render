@@ -35,7 +35,7 @@ translate( -2, -1, -10,
 scale( .2, .2, 20,
 	cylinder {
 		material = { 
-			emissive = (0.8, 0.4, 0); 
+			diffuse = (0.8, 0.4, 0); 
 		}
 	} ) )
 
@@ -46,7 +46,7 @@ translate( -2, -1, -10,
 scale( .2, .2, 20,
 	cylinder {
 		material = { 
-			emissive = (0.8, 0.0, 0.4); 
+			diffuse = (0.8, 0.0, 0.4); 
 		}
 	} ) ) ) )
 

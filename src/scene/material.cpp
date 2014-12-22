@@ -38,9 +38,11 @@ Vec3d Material::shade( Scene *scene, const ray& r, const isect& i ) const
 
     //======[ Ambient ]======
     //missing Ka
-    L += ka(i);
-    if(debugMode)
+    L += prod(ka(i),scene->ambient());
+    if(debugMode){
+        std::cout << "ambient: " << scene->ambient() <<"\n";
         std::cout << "ka(i): " << ka(i) <<"\n";
+    }
 
     //iterate through lights
     for ( std::vector<Light*>::const_iterator litr = scene->beginLights(); 

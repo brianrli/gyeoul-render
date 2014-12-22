@@ -34,6 +34,8 @@ public:
 
 	const Scene& getScene() { return *scene; }
 
+	void setDepth(int d){max_depth = d;}
+
 private:
 	unsigned char *buffer;
 	int buffer_width, buffer_height;
@@ -41,6 +43,7 @@ private:
 	Scene* scene;
 
     bool m_bBufferReady;
+    int max_depth; //max depth
 
 };
 

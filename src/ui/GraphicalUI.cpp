@@ -136,6 +136,8 @@ void GraphicalUI::cb_render(Fl_Widget* o, void* v)
 		pUI->m_traceGlWindow->show();
 
 		pUI->raytracer->traceSetup(width, height);
+		pUI->raytracer->setDepth(pUI->getDepth());
+
 		
 		// Save the window label
 		const char *old_label = pUI->m_traceGlWindow->label();

@@ -71,6 +71,8 @@ int CommandLineUI::run()
 {
 	assert( raytracer != 0 );
 	raytracer->loadScene( rayName );
+	raytracer->setDepth(m_nDepth);
+	std::cout<<"set depth to: " << m_nDepth << "\n";
 
 	if( raytracer->sceneLoaded() )
 	{
