@@ -23,7 +23,7 @@ using namespace std;
 // Use this variable to decide if you want to print out
 // debugging messages.  Gets set in the "trace single ray" mode
 // in TraceGLWindow, for example.
-bool debugMode = false;
+bool debugMode = true;
 
 // Trace a top-level ray through normalized window coordinates (x,y)
 // through the projection plane, and out into the scene.  All we do is
@@ -61,7 +61,6 @@ bool refract(Vec3d &D, Vec3d &N, double index, Vec3d &t){
 Vec3d RayTracer::traceRay( const ray& r, 
 	const Vec3d& thresh, int depth )
 {
-	// std::cout << "max depth: " << max_depth << "\n";
 	int refl_depth = depth;
 	int refr_depth = depth;
 	

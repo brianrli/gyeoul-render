@@ -22,9 +22,9 @@ Vec3d DirectionalLight::shadowAttenuation( const Vec3d& P ) const
 
 	ray shadow_r(P, direction, ray::SHADOW);
 	
-	//std::cout << "Ray Details:\n";
-	//P.print();
-	//direction.print();
+	std::cout << "Ray Details:\n";
+	P.print();
+	direction.print();
 	bool cont = true;
 	bool in = false;
 
@@ -92,9 +92,9 @@ Vec3d PointLight::shadowAttenuation(const Vec3d& P) const
 	direction.normalize();
 	ray shadow_r(P, direction, ray::SHADOW);
 	
-	//std::cout << "Ray Details:\n";
-	//P.print();
-	//direction.print();
+	std::cout << "Ray Details:\n";
+	P.print();
+	direction.print();
 	bool cont = true;
 	bool in = false;
 
