@@ -91,20 +91,19 @@ Vec3d RayTracer::traceRay( const ray& r,
 			Vec3d refl = d - (2*(d*i.N)*i.N);
 			refl.normalize();
 
-			if(debugMode){
-				std::cout << "reflect direction ";
-				refl.print();
-			}
+
 			//reflectance ray
 			ray refl_ray(r.at(i.t), refl, ray::REFLECTION);
 			refl_depth--;
 			Vec3d refl_contribution = traceRay(refl_ray,thresh,refl_depth);
+
 			I = I + prod(m.kr(i),refl_contribution);
 
 			//debugging
 			if(debugMode){
 				std::cout << "kr: ";
 				m.kr(i).print();
+				m.ks(i).print();
 				std::cout << "contribution: ";
 				refl_contribution.print();
 				std::cout << "depth: " << depth << "\n";
@@ -152,6 +151,8 @@ Vec3d RayTracer::traceRay( const ray& r,
 
 
 		//=====[ return radiance ]=====
+		if(debugMode)
+			std::cout << "[return radiance] " << I << "\n";
 		return I;
 	} else {
 		// No intersection.  This ray travels to infinity, so we color

@@ -75,6 +75,8 @@ bool TrimeshFace::intersectLocal( const ray& r, isect& it ) const
     Vec3d vb = parent->vertices[ids[1]];
     Vec3d vc = parent->vertices[ids[2]];
 
+
+
     // std::cout << va << " " << vb << " " << vc << "\n";
     Vec3d normal = (va-vb)^(va-vc);
     // std::cout << normal[0] << " " << normal[1] << " " << normal[2] << "\n";
@@ -122,13 +124,50 @@ bool TrimeshFace::intersectLocal( const ray& r, isect& it ) const
         // std::cout << beta << " beta failed" << 1-gamma << "\n";
         return false;
     }
-    // else
-        // std::cout<<beta<<"\n";
+
+    //=======[ Phong Normal Interpolation ]======
+
+    // Vec3d na = parent->vertices[ids[0]];
+    // Vec3d nb = parent->vertices[ids[1]];
+    // Vec3d nc = parent->vertices[ids[2]];
+
+    Vec3d P = r.at(t);
+    Vec3d na = (vc-vb)^(P-vb);
+    Vec3d nb = (va-vc)^(P-vc);
+    Vec3d nc = (vb-va)^(P-va);
+
+    //normal not necessarily of unit length
+    double n2 = pow(normal.length(),2);
+    double Sigma = (normal*na)/n2;
+    double Beta = (normal*nb)/n2;
+    double Gamma = (normal*nc)/n2;
+
+    Material ca = *parent->materials[ids[0]];
+    Material cb = *parent->materials[ids[1]];
+    Material cc = *parent->materials[ids[2]]; 
+
+    Material c_out;
+    ca = Sigma * ca;
+    cb = Beta * cb;
+    cc = Gamma * cc;
+    
+    c_out += ca;
+    c_out += cb;
+    c_out += cc;
+
+    std::cout<< "BSG: " << Beta << " " << Sigma << " " << Gamma << "\n";
+    std::cout << "normal is" << normal << "\n";
+    std::cout << "n2: " << n2 << "\n";
+    std::cout << na << " " << normal*na << "\n";
+    std::cout << nb << " " << normal*nb << "\n";
+    std::cout << nc << " " << normal*nc << "\n";
+
 
     // Add triangle intersection code here.
     normal.normalize();
     it.setN(normal);
     it.setT(t);
+    it.setMaterial(c_out);
     it.obj = this;
 
 	// std::cout << "tmesh isect\n"; 

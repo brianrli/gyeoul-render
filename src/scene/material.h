@@ -175,8 +175,6 @@ public:
 
 	virtual Vec3d shade( Scene *scene, const ray& r, const isect& i ) const;
 
-
-    
     Material &
     operator+=( const Material &m )
     {
