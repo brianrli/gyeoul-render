@@ -49,16 +49,12 @@ Vec3d Material::shade( Scene *scene, const ray& r, const isect& i ) const
          litr != scene->endLights(); 
          ++litr )
     {
-        std::cout << "light\n";
         Vec3d Lc; //light contribution
         Light* pLight = *litr;
-        std::cout <<P << "\n";
         Vec3d sa = pLight->shadowAttenuation(P);
-        std::cout << "2\n";
         double da = pLight->distanceAttenuation(P);
 
         //======[ Diffuse ]======
-        std::cout << "3\n";
         Vec3d direction = pLight->getDirection(P);
         Vec3d normal = i.N;
         if(debugMode)

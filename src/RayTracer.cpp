@@ -23,7 +23,7 @@ using namespace std;
 // Use this variable to decide if you want to print out
 // debugging messages.  Gets set in the "trace single ray" mode
 // in TraceGLWindow, for example.
-bool debugMode = true;
+bool debugMode = false;
 
 // Trace a top-level ray through normalized window coordinates (x,y)
 // through the projection plane, and out into the scene.  All we do is
@@ -61,6 +61,7 @@ bool refract(Vec3d &D, Vec3d &N, double index, Vec3d &t){
 Vec3d RayTracer::traceRay( const ray& r, 
 	const Vec3d& thresh, int depth )
 {
+	// std::cout << "traceRay "m << r.getDirection() << " " << r.getPosition() << " ";
 	int refl_depth = depth;
 	int refr_depth = depth;
 	
@@ -68,16 +69,11 @@ Vec3d RayTracer::traceRay( const ray& r,
 	Vec3d I;
 
 	if(scene->intersect( r, i )){
-		// YOUR CODE HERE
 
-		// An intersection occured!  We've got work to do.  For now,
-		// this code gets the material for the surface that was intersected,
-		// and asks that material to provide a color for the ray.  
-
-		// This is a great place to insert code for recursive ray tracing.
-		// Instead of just returning the result of shade(), add some
-		// more steps: add in the contributions from reflected and refracted
-		// rays.
+		// std::cout << i.t << "\n";
+		// while(1){
+			// int stall = 0;
+		// }
 
 		const Material& m = i.getMaterial();
 		I = m.shade(scene, r, i);
