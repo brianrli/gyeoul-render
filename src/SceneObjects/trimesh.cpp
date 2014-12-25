@@ -3,6 +3,7 @@
 #include "trimesh.h"
 
 using namespace std;
+extern bool debugMode;
  
 Trimesh::~Trimesh()
 {
@@ -78,6 +79,7 @@ bool TrimeshFace::intersectLocal( const ray& r, isect& it ) const
 
     // std::cout << va << " " << vb << " " m<< vc << "\n";
     Vec3d normal = (va-vb)^(va-vc);
+
     // std::cout << normal[0] << " " << normal[1] << " " << normal[2] << "\n";
 
     double a = va[X]-vb[X];
@@ -99,27 +101,10 @@ bool TrimeshFace::intersectLocal( const ray& r, isect& it ) const
     double M = a*(e*i - h*f) + b*(g*f - d*i) + c*(d*h - e*g);
     if(M==0)
         return false;
-    
-    // std::cout << va << "\n";
-    // std::cout << vb << "\n";
-    // std::cout << vc << "\n";
-    // std::cout << a << "\n";
-    // std::cout << e << "\n";
-    // std::cout << i << "\n";
-    // std::cout << h << "\n";
-    // std::cout << f << "\n";
-    // std::cout << b << "\n";
-    // std::cout << d << "\n";
-    // std::cout << c << "\n";
-    // std::cout << e << "\n";
-
 
     //compute T
     double t;
     t = -(f*(a*k-j*b)+e*(j*c-a*l)+d*(b*l-k*c))/M;
-    // std::cout << M <<"\n";
-    // std::cout << t <<"\n";
-    // std::cout << -(f*(a*k-j*b)+e*(j*c-a*l)+d*(b*l-k*c)) <<"\n";
     if(t < RAY_EPSILON){
         // std:: cout << t << "t failed\n\n";
         return false;
@@ -149,6 +134,7 @@ bool TrimeshFace::intersectLocal( const ray& r, isect& it ) const
     // Vec3d nb = parent->vertices[ids[1]];
     // Vec3d nc = parent->vertices[ids[2]];
     if(parent->materials.size() != 0){
+
         Vec3d P = r.at(t);
         Vec3d na = (vc-vb)^(P-vb);
         Vec3d nb = (va-vc)^(P-vc);
@@ -173,12 +159,14 @@ bool TrimeshFace::intersectLocal( const ray& r, isect& it ) const
         c_out += cb;
         c_out += cc;
 
-        // std::cout<< "BSG: " << Beta << " " << Sigma << " " << Gamma << "\n";
-        // std::cout << "normal is" << normal << "\n";
-        // std::cout << "n2: " << n2 << "\n";
-        // std::cout << na << " " << normal*na << "\n";
-        // std::cout << nb << " " << normal*nb << "\n";
-        // std::cout << nc << " " << normal*nc << "\n";
+        if(debugMode){
+            std::cout<< "BSG: " << Beta << " " << Sigma << " " << Gamma << "\n";
+            std::cout << "normal is" << normal << "\n";
+            std::cout << "n2: " << n2 << "\n";
+            std::cout << na << " " << normal*na << "\n";
+            std::cout << nb << " " << normal*nb << "\n";
+            std::cout << nc << " " << normal*nc << "\n";
+        }
 
         it.setMaterial(c_out);
     } 

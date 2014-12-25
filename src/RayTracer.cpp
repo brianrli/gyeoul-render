@@ -247,9 +247,37 @@ void RayTracer::traceSetup( int w, int h )
 	m_bBufferReady = true;
 }
 
+//splits i j into two
+void quadrangulate(int i, int j, double w, double h, double *arr)
+{
+
+
+	w*=2;
+	h*=2;
+
+	// std::cout << i << "\n";
+	// std::cout << j << "\n";
+	// std::cout << w << "\n";
+	// std::cout << h << "\n";
+
+	arr[0] = double(i*2)/w;
+	arr[1] = double(j*2)/h;
+	
+	arr[2] = double(i*2)/w;
+	arr[3] = double(j*2+1)/h;
+	
+	arr[4] = double(i*2+1)/w;
+	// std::cout << double(i*2+1)/w << "\n";
+	arr[5] = double(j*2)/h;
+	
+	arr[6] = double(i*2+1)/w;
+	arr[7] = double(j*2+1)/h;
+}
+
 void RayTracer::tracePixel( int i, int j )
 {
 	Vec3d col;
+	bool antialias = true;
 
 	if( ! sceneLoaded() )
 		return;
@@ -257,7 +285,33 @@ void RayTracer::tracePixel( int i, int j )
 	double x = double(i)/double(buffer_width);
 	double y = double(j)/double(buffer_height);
 
-	col = trace( x,y );
+	double arr[8];
+	quadrangulate(i,j,buffer_width,buffer_height,arr);
+
+	if(antialias){
+		for (int i = 0; i<4 ;i++){
+			int k = 2*i;
+			int l = k+1;
+
+			if(debugMode){
+				std::cout << "k: " << k << "\t" << arr[k] <<"\n";
+				std::cout << "l: " << l << "\t" << arr[l] <<"\n";
+				std::cout << trace(arr[k],arr[l]) << "\n\n";
+			}
+
+			col+=trace(arr[k],arr[l]);
+		}
+		col /= 4.0;
+
+		// std::cout << "x: " << x << "\ty: " << y << "\n";
+
+		// while(1){
+		// 	bool stall = true;
+		// }
+	}
+	else
+		col = trace(x,y);
+	
 	unsigned char *pixel = buffer + ( i + j * buffer_width ) * 3;
 
 	pixel[0] = (int)( 255.0 * col[0]);
