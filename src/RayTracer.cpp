@@ -1,3 +1,5 @@
+#include "accel/kdtree.h"
+
 // The main ray tracer.
 #include "RayTracer.h"
 #include "scene/light.h"
@@ -10,6 +12,9 @@
 #include "ui/TraceUI.h"
 #include <cmath>
 #include <algorithm>
+
+//Kd-Tree
+
 
 extern TraceUI* traceUI;
 

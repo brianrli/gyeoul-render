@@ -60,6 +60,19 @@ public:
 	// closest to the origin in tMin and the "t" value of the far intersection
 	// in tMax and return true, else return false.
 	bool intersect(const ray& r, double& tMin, double& tMax) const;
+
+	BoundingBox join(const BoundingBox &target)
+	{	
+		BoundingBox u;
+		u.min[0] = ((min[0] < target.min[0]) ? min[0] : target.min[0]);
+		u.min[1] = ((min[1] < target.min[1]) ? min[1] : target.min[1]);
+		u.min[2] = ((min[2] < target.min[2]) ? min[2] : target.min[2]);
+
+		u.min[0] = ((max[0] < target.max[0]) ? max[0] : target.max[0]);
+		u.min[1] = ((max[1] < target.max[1]) ? max[1] : target.max[1]);
+		u.min[2] = ((max[2] < target.max[2]) ? max[2] : target.max[2]);
+		return u;
+	}
 };
 
 class TransformNode
