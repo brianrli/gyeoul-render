@@ -1,33 +1,36 @@
 #include "kdtree.h"
 
-void Kdtree::build(){
-
+//constructor
+KDtree::KDtree(std::vector<Geometry*> prims,int d)
+:max_depth(d)
+{
+	root = new KdNode();
+	build(prims,max_depth,&root);
 }
 
-//make sure kdtree nodes are individual
-KDnode::KDnode(){	
-	left = NULL;
-	right = NULL;
-}
 
-KDnode::~KDnode(){
-	// delete (*left);
-	// delete(*right);
-}
+//build tree
+void KDtree::build(std::vector<Geometry*> prims, int depth, KDnode *node){
+	node->primitives = prims;
 
-KDnode* KDnode::build(int depth){
+	primitives = prims;
 	//=====[make leaf]=====
 	if(depth == 0)
-		return NULL;
+		return;
 
 	//no primitives
 	if(primitives.size() == 0){
-		return NULL;
+		return;
+	}
+
+	if(primitives.size()==1){
+		return;
 	}
 
 	//=====[ make interior node ]=====
-	left = new KDnode(); //left child
-	right = new KDnode(); //right child
+	node->left = new KdNode();
+	node->right = new KdNode();
+	bbox = getBoundingBox();
 
 	//choose split position
 	axis = bbox.longest_axis();
@@ -39,17 +42,32 @@ KDnode* KDnode::build(int depth){
 	}
 	split /= primitives.size();
 
+	std::vector<*Geometry> left_prims;
+	std::vector<*Geometry> right_prims;
+
 	//if left of midpoint
 	for(int i = 0; i < primitives.size(); i++){
 		if(primitives[i]->getBoundingBox().max[axis]<split)
-			left->primitives.push_back(primitives[i]);
+			left_primitives.push_back(primitives[i]);
 		else
-			right->primitives.push_back(primitives[i]);
+			right_primitives.push_back(primitives[i]);
 	}
 
-	left->build(depth--);
-	right->build(depth--);
-	return this;
+	build(left_prims, depth--,node->left);
+	build(right_prims, depth--,node->right);
+	bbox = node->getBoundingBox();
+	return;
+}
+
+//make sure kdtree nodes are individual
+KDnode::KDnode(){	
+	left = NULL;
+	right = NULL;
+}
+
+KDnode::~KDnode(){
+	// delete (*left);
+	// delete(*right);
 }
 
 //return node bounding box

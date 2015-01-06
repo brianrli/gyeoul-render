@@ -10,7 +10,7 @@ LIBS  = `fltk-config --cxxflags --ldflags --use-gl --use-images --use-glut` -lm 
 
 # LIBS = -lfltk -lfltk_gl -lXext -lX11 -lm -lGL -lGLU
 
-CFLAGS = -g
+CFLAGS = -g -fpermissive -Wnon-virtual-dtor
 
 CC = g++
 

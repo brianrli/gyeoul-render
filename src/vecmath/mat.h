@@ -4,6 +4,8 @@
 #include <iostream>
 #include <stdio.h>
 #include <string.h>
+#include "../vecmath/vec.h"
+
 
 //==========[ Forward References ]=============================================
 

@@ -2,31 +2,35 @@
 
 using namespace std;
 
-class KDtree{
-	KDtree();
-	~KDtree();
-
-	void build(int depth);
-	KDnode *root;
-
-	std::vector<Geometry*> primitives;
-};
-
+//node
 class KDnode{
+
 public:
 	KDnode();
 	~KDnode();
-
-	void addPrimitive(KDnode *node, Geometry *prim);
-	BoundingBox getBoundingBox();
-	
 	BoundingBox bbox;
 	KDnode *left; //left child
 	KDnode *right; //right child
-	vector<Geometry*> primitives;
-
+	
 private:
-	int depth;
+	vector<Geometry*> primitives; //geometry
 	int axis;
 	float split;
+	BoundingBox getBoundingBox();
+
 };
+
+//tree
+class KDtree{
+public:
+	KDtree();
+	KDtree(std::vector<Geometry*> prims,int d);
+	~KDtree();
+
+	void build(std::vector<Geometry*> prims, int depth, KDnode &node);
+	KDnode *root;
+
+	std::vector<Geometry*> primitives;
+	int max_depth;
+};
+
