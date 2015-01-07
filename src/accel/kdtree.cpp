@@ -4,13 +4,13 @@
 KDtree::KDtree(std::vector<Geometry*> prims,int d)
 :max_depth(d)
 {
-	root = new KdNode();
-	build(prims,max_depth,&root);
+	root = new KDnode();
+	build(prims,max_depth,root);
 }
 
 
 //build tree
-void KDtree::build(std::vector<Geometry*> prims, int depth, KDnode *node){
+void KDtree::build(std::vector<Geometry*> &prims, int& depth, KDnode* node){
 	node->primitives = prims;
 
 	primitives = prims;
@@ -28,34 +28,37 @@ void KDtree::build(std::vector<Geometry*> prims, int depth, KDnode *node){
 	}
 
 	//=====[ make interior node ]=====
-	node->left = new KdNode();
-	node->right = new KdNode();
-	bbox = getBoundingBox();
+	node->left = new KDnode();
+	node->right = new KDnode();
+	node->bbox = node->getBoundingBox();
 
 	//choose split position
-	axis = bbox.longest_axis();
+	node->axis = node->bbox->longest_axis();
+	int axis = node->axis;
 
 	//for now, choose the midpoint of the longest axis
-	for(int i = 0; i < primitives.size(); i++){
+	for(size_t i = 0; i < primitives.size(); i++){
 		BoundingBox b = primitives[i]->getBoundingBox();
-		split += (b.max[axis]+b.min[axis])/2.0;
+		node->split += (b.max[axis]+b.min[axis])/2.0;
 	}
-	split /= primitives.size();
+	node->split /= primitives.size();
 
-	std::vector<*Geometry> left_prims;
-	std::vector<*Geometry> right_prims;
+	std::vector<Geometry*> left_primitives;
+	std::vector<Geometry*> right_primitives;
+	
 
 	//if left of midpoint
-	for(int i = 0; i < primitives.size(); i++){
-		if(primitives[i]->getBoundingBox().max[axis]<split)
+	for(size_t i = 0; i < primitives.size(); i++){
+		if(primitives[i]->getBoundingBox().max[axis]<node->split)
 			left_primitives.push_back(primitives[i]);
 		else
 			right_primitives.push_back(primitives[i]);
 	}
 
-	build(left_prims, depth--,node->left);
-	build(right_prims, depth--,node->right);
-	bbox = node->getBoundingBox();
+	depth--;
+	build(left_primitives, depth,node->left);
+	build(right_primitives, depth,node->right);
+	
 	return;
 }
 
@@ -72,7 +75,7 @@ KDnode::~KDnode(){
 
 //return node bounding box
 //change bbox to this bounding box
-BoundingBox KDnode::getBoundingBox(){
+BoundingBox* KDnode::getBoundingBox(){
 	std::vector<Geometry*>::iterator g;//iterator
 	BoundingBox b = (*primitives.begin())->getBoundingBox();
 
@@ -80,5 +83,7 @@ BoundingBox KDnode::getBoundingBox(){
 	{
 		b = b.join((*g)->getBoundingBox());
 	}
-	return b;
+
+	BoundingBox *bbx = new BoundingBox(b);
+	return bbx;
 }

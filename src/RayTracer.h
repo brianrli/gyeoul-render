@@ -40,7 +40,7 @@ private:
 	unsigned char *buffer;
 	int buffer_width, buffer_height;
 	int bufferSize;
-	Scene* scene;
+	Scene* scene; 
 
     bool m_bBufferReady;
     int max_depth; //max depth

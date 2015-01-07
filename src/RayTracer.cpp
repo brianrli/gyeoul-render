@@ -1,5 +1,3 @@
-#include "accel/kdtree.h"
-
 // The main ray tracer.
 #include "RayTracer.h"
 #include "scene/light.h"
@@ -12,8 +10,6 @@
 #include "ui/TraceUI.h"
 #include <cmath>
 #include <algorithm>
-
-//Kd-Tree
 
 
 extern TraceUI* traceUI;
@@ -238,6 +234,7 @@ bool RayTracer::loadScene( char* fn )
 
 void RayTracer::traceSetup( int w, int h )
 {
+
 	if( buffer_width != w || buffer_height != h )
 	{
 		buffer_width = w;
@@ -249,6 +246,7 @@ void RayTracer::traceSetup( int w, int h )
 
 	}
 	memset( buffer, 0, w*h*3 );
+
 	m_bBufferReady = true;
 }
 
@@ -276,7 +274,7 @@ void quadrangulate(int x, int y, double w, double h, double *arr, int depth)
 void RayTracer::tracePixel( int i, int j )
 {
 	Vec3d col;
-	bool antialias = true;
+	bool antialias = false;
 
 	if( ! sceneLoaded() )
 		return;

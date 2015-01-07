@@ -2,11 +2,6 @@
 // scene.h
 //
 // The Scene class and the geometric types that it can contain.
-//
-
-
-
-
 #ifndef __SCENE_H__
 #define __SCENE_H__
 
@@ -21,9 +16,11 @@
 #include "camera.h"
 #include "../vecmath/vec.h"
 #include "../vecmath/mat.h"
+#include "../accel/kdtree.h"
 
 class Light;
 class Scene;
+// class KDtree;
 
 class SceneElement
 {
