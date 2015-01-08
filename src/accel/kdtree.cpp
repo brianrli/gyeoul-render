@@ -1,19 +1,34 @@
 #include "kdtree.h"
 
 //constructor
-KDtree::KDtree(std::vector<Geometry*> prims,int d)
+KDtree::KDtree(std::vector<Geometry*> *prims,int d)
 :max_depth(d)
 {
 	root = new KDnode();
-	build(prims,max_depth,root);
+	std::vector<Geometry*> objects = *prims;
+
+	int i = 0;
+	std::vector<Geometry*>::const_iterator g;
+	for( g = objects.begin(); g != objects.end(); ++g ) {
+		std::cout << i << "\n";
+		i++;
+	}
+
+	build(objects,max_depth,root);
 }
 
 
 //build tree
 void KDtree::build(std::vector<Geometry*> &prims, int& depth, KDnode* node){
+	
+	// std::vector<Geometry*> primitives(&prims);
 	node->primitives = prims;
 
-	primitives = prims;
+	std::cout << "KDtree::build\n";
+	std::cout << node->getBoundingBox()->min << "\n";
+	std::cout << node->getBoundingBox()->max << "\n";
+
+	// primitives = prims;
 	//=====[make leaf]=====
 	if(depth == 0)
 		return;
@@ -45,7 +60,6 @@ void KDtree::build(std::vector<Geometry*> &prims, int& depth, KDnode* node){
 
 	std::vector<Geometry*> left_primitives;
 	std::vector<Geometry*> right_primitives;
-	
 
 	//if left of midpoint
 	for(size_t i = 0; i < primitives.size(); i++){
@@ -76,14 +90,28 @@ KDnode::~KDnode(){
 //return node bounding box
 //change bbox to this bounding box
 BoundingBox* KDnode::getBoundingBox(){
-	std::vector<Geometry*>::iterator g;//iterator
+	std::cout << "getBoundingBox\n";
+	std::vector<Geometry*>::const_iterator g;//iterator
+	std::cout << "getBoundingBox1\n";
+	g = primitives.begin();
+	std::vector<Geometry*>::const_iterator e = primitives.end();//iterator
+	if(g == e){
+		std::cout << "WTF\n";
+	}
+	std::cout << "getBoundingBox2.5\n";
+	(*g)->hasBoundingBoxCapability();
+	// std::cout << (*primitives.begin())->hasBoundingBoxCapability() << "or not \n";
+	std::cout << "getBoundingBox2\n";
 	BoundingBox b = (*primitives.begin())->getBoundingBox();
-
+	std::cout << "getBoundingBox3\n";
+	int i = 1;
 	for( g = primitives.begin(); g != primitives.end(); ++g ) 
 	{
+		std::cout << i << "\n";
 		b = b.join((*g)->getBoundingBox());
 	}
-
+	std::cout << b.min << "\n";
+	std::cout << b.max << "\n";
 	BoundingBox *bbx = new BoundingBox(b);
 	return bbx;
 }

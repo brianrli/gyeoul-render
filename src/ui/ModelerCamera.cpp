@@ -22,7 +22,7 @@ const float kMouseTranslationXSensitivity	= 0.03f;
 const float kMouseTranslationYSensitivity	= 0.03f;
 const float kMouseZoomSensitivity			= 0.08f;
 
-void ModelerCamera::calculateViewingTransformParameters() 
+void ModelerCamera::calculateViewingTransformParameters()  
 {
 	Mat4f dollyXform;
 	Mat4f azimXform;
@@ -53,6 +53,7 @@ void ModelerCamera::calculateViewingTransformParameters()
 ModelerCamera::ModelerCamera() 
 {
 	reset();
+	std::cout << "reset\n";
 }
 
 void ModelerCamera::reset()

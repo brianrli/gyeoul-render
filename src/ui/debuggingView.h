@@ -27,7 +27,7 @@ public:
 	{ SCENE_LIGHTING, DEFAULT_LIGHTING, };
 
     
-	DebuggingView(int x, int y, int w, int h, char *label=0);
+	DebuggingView(int x, int y, int w, int h,char *label=0);
 
 	virtual ~DebuggingView();
     virtual int handle(int event);

@@ -32,7 +32,6 @@ int main(int argc, char **argv) {
 	}
 
 	theRayTracer=new RayTracer();
-
 	traceUI->setRayTracer(theRayTracer);
 	return traceUI->run();
 }

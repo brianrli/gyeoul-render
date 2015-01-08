@@ -13,23 +13,26 @@ class KDnode{
 public:
 	KDnode();
 	~KDnode();
+	
 	BoundingBox *bbox;
+	
 	KDnode *left; //left child
 	KDnode *right; //right child
-	Geometry *bob;
-
-	vector<Geometry*> primitives; //geometry
-	BoundingBox* getBoundingBox();
-	float split;
-	int axis;	
 	
+	vector<Geometry*> primitives; //geometry
+	
+	BoundingBox* getBoundingBox();
+	
+	float split;
+	int axis;		
 };
 
 //tree
 class KDtree{
+
 public:
 	KDtree();
-	KDtree(std::vector<Geometry*> prims,int d);
+	KDtree(std::vector<Geometry*> *prims,int d);
 	~KDtree();
 
 	void build(std::vector<Geometry*> &prims, int& depth, KDnode* node);

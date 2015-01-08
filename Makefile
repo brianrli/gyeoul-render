@@ -10,7 +10,7 @@ LIBS  = `fltk-config --cxxflags --ldflags --use-gl --use-images --use-glut` -lm 
 
 # LIBS = -lfltk -lfltk_gl -lXext -lX11 -lm -lGL -lGLU
 
-CFLAGS = -g -fpermissive -Wnon-virtual-dtor
+CFLAGS = -g 
 
 CC = g++
 
@@ -29,12 +29,13 @@ ALL.O = src/main.o src/getopt.o src/RayTracer.o \
 	src/fileio/bitmap.o src/fileio/buffer.o \
 	src/parser/Token.o src/parser/Tokenizer.o \
 	src/parser/Parser.o src/parser/ParserException.o \
+	src/accel/kdtree.o\
 	src/scene/camera.o src/scene/light.o \
 	src/scene/material.o src/scene/ray.o src/scene/scene.o \
 	src/SceneObjects/Box.o src/SceneObjects/Cone.o \
 	src/SceneObjects/Cylinder.o src/SceneObjects/trimesh.o \
 	src/SceneObjects/Sphere.o src/SceneObjects/Square.o \
-	src/accel/kdtree.o
+	
 
 ray: $(ALL.O)
 	$(CC) $(CFLAGS) -o $@ $(ALL.O) $(INCLUDE) $(LIBDIR) $(LIBS)

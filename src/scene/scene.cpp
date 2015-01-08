@@ -177,3 +177,16 @@ TextureMap* Scene::getTexture( string name )
 		return (*itr).second;
 	}
 }
+
+void Scene::buildkdtree(int depth){
+	giter g;
+	int i = 0;
+	std::cout << "begin\n";
+	for( g = objects.begin(); g != objects.end(); ++g ) {
+		std::cout << i << "\n";
+		i++;
+	}
+	std::cout << "end\n";
+	
+	tree = new KDtree(&objects,depth);
+}

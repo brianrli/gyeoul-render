@@ -180,6 +180,7 @@ void RayTracer::getBuffer( unsigned char *&buf, int &w, int &h )
 
 double RayTracer::aspectRatio()
 {
+	std::cout << "Aspect Ratio "<<scene->getCamera().getAspectRatio() << "\n";
 	return sceneLoaded() ? scene->getCamera().getAspectRatio() : 1;
 }
 
@@ -229,6 +230,8 @@ bool RayTracer::loadScene( char* fn )
 	if( ! sceneLoaded() )
 		return false;
 
+	// build kd tree
+	scene->buildkdtree(8);
 	return true;
 }
 
@@ -273,8 +276,9 @@ void quadrangulate(int x, int y, double w, double h, double *arr, int depth)
 
 void RayTracer::tracePixel( int i, int j )
 {
+	// std::cout << "tracePixel\n";
 	Vec3d col;
-	bool antialias = false;
+	bool antialias = true;
 
 	if( ! sceneLoaded() )
 		return;

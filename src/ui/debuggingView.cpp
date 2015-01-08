@@ -94,7 +94,7 @@ void printString(char *s)
 	bool				m_showShadowRays;
 
 
-DebuggingView::DebuggingView(int x, int y, int w, int h, char *label)
+DebuggingView::DebuggingView(int x, int y, int w, int h,char *label)
 	: Fl_Gl_Window(x,y,w,h,label), raytracer(0),
 	  m_shadingMode(NORMAL), m_quality(HIGH_QUALITY),
 	  m_lightingMode(DEFAULT_LIGHTING),
@@ -107,6 +107,7 @@ DebuggingView::DebuggingView(int x, int y, int w, int h, char *label)
 	  m_showVisibilityRays(true), m_showReflectionRays(true),
 	  m_showRefractionRays(true), m_showShadowRays(false)
 {
+	std::cout << "what\n";
     m_camera = new ModelerCamera();
 }
 
@@ -203,6 +204,7 @@ static GLfloat lightDiffuse1[]  = { 1, 1, 1, 1 };
 
 void DebuggingView::draw()
 {
+	
     if (!valid())
     {
         glShadeModel( GL_SMOOTH );
@@ -217,13 +219,13 @@ void DebuggingView::draw()
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(30.0,float(w())/float(h()),1.0,100.0);
-				
+		
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);    
 	
+	
 	m_camera->applyViewingTransform();
-
 	// Need to apply an extra transform so that our camera 'approximately'
 	// lines up with the scene camera, initially, and to correct for our 
 	// definition of "up."
@@ -236,6 +238,7 @@ void DebuggingView::draw()
 		uAxis.normalize();
 		vAxis.normalize();
 		wAxis.normalize();
+
 
 		GLdouble rotMat[16];
 		rotMat[0] = -uAxis[0];
@@ -256,11 +259,15 @@ void DebuggingView::draw()
 		rotMat[15] = 1.0;
 
 		glMultMatrixd( rotMat );
+		
 	}
 	
-
+	std::cout << "0\n";
 	if( m_showAxes )
 		drawAxes();
+
+	std::cout << "1\n";
+
 
 	if( raytracer == 0 || !raytracer->sceneLoaded() )
 		return;
@@ -268,16 +275,21 @@ void DebuggingView::draw()
 	if( m_showLights )
 		drawLights();
 
+	std::cout << "2\n";
 	if( m_showGeometry )
 	{
+		std::cout << "2\n";
 		lightScene();
+		std::cout << "2\n";
 		drawScene();
 	}
 
+	std::cout << "3\n";		
 	drawRays();
 
 	if( m_showCamera )
 		drawCamera();
+	std::cout << "4\n";
 }
 
 void DebuggingView::setRayTracer(RayTracer *tracer)
@@ -443,9 +455,12 @@ void DebuggingView::drawScene()
 		mat[3] = 1.0f;
 		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mat );
 	}
-
+	std::cout <<"swag\n";
+	raytracer->getScene();
+	std::cout <<"penis\n";
 	raytracer->getScene().glDraw(divisions, m_useSceneMaterials, 
 		m_useSceneTextures);
+	std::cout <<"death\n";
 }
 
 

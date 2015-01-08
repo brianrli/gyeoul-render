@@ -94,6 +94,7 @@ void GraphicalUI::cb_about(Fl_Menu_* o, void* v)
 
 void GraphicalUI::cb_sizeSlides(Fl_Widget* o, void* v)
 {
+	std::cout << "cb_sizeSlides\n";
 	GraphicalUI* pUI=(GraphicalUI*)(o->user_data());
 
 	// terminate the rendering so we don't get crashes
@@ -115,8 +116,9 @@ void GraphicalUI::cb_debuggingDisplayCheckButton(Fl_Widget* o, void* v)
 {
 	GraphicalUI* pUI=(GraphicalUI*)(o->user_data());
 	pUI->m_displayDebuggingInfo = (((Fl_Check_Button*)o)->value() == 1);
-	if( pUI->m_displayDebuggingInfo )
+	if( pUI->m_displayDebuggingInfo ){
 		pUI->m_debuggingWindow->show();
+	}
 	else
 		pUI->m_debuggingWindow->hide();
 }
@@ -253,7 +255,7 @@ void GraphicalUI::stopTracing()
 
 	// Wait for the trace to finish (simple synchronization)
 	while( !doneTrace )	Fl::wait();
-}
+} 
 
 GraphicalUI::GraphicalUI() {
 	// init.

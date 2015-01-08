@@ -20,7 +20,7 @@
 
 class Light;
 class Scene;
-// class KDtree;
+class KDtree;
 
 class SceneElement
 {
@@ -330,7 +330,12 @@ public:
 
 	const BoundingBox& bounds() const		{ return sceneBounds; }
 
+	//=====[Build KD-Tree]=====
+	void buildkdtree(int depth);
 private:
+	//KD Tree Acceleration
+	KDtree *tree;
+
     std::vector<Geometry*> objects;
 	std::vector<Geometry*> nonboundedobjects;
 	std::vector<Geometry*> boundedobjects;

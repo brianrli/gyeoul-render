@@ -8,18 +8,9 @@
 #include "../fileio/bitmap.h"
 
 #include "../RayTracer.h"
+#include "getopt.h"
 
 using namespace std;
-
-
-// ***********************************************************
-// from getopt.cpp
-// it should be put in an include file.
-//
-extern int getopt(int argc, char* const* argv, char *optstring);
-extern char* optarg;
-extern int optind, opterr, optopt;
-// ***********************************************************
 
 
 // The command line UI simply parses out all the arguments off
@@ -49,8 +40,10 @@ CommandLineUI::CommandLineUI( int argc, char** argv )
 			usage();
 			exit(1);
 		}
+
 	}
 
+	cout << "out of loop\n";
 	// std::cout << optind << " " << argc << "\n";
 	if( optind >= argc-1 )
 	{
@@ -69,9 +62,12 @@ CommandLineUI::CommandLineUI( int argc, char** argv )
 
 int CommandLineUI::run()
 {
+	m_nDepth = 3;
+	// std::cout << "out\n";
 	assert( raytracer != 0 );
 	raytracer->loadScene( rayName );
-	raytracer->setDepth(m_nDepth);
+	// raytracer->setDepth(m_nDepth);
+	raytracer->setDepth(3);
 	std::cout<<"set depth to: " << m_nDepth << "\n";
 
 	if( raytracer->sceneLoaded() )
@@ -82,11 +78,14 @@ int CommandLineUI::run()
 		raytracer->traceSetup( width, height );
 
 		clock_t start, end;
-		start = clock();
+		start = clock(); 
 
+		cout << raytracer->aspectRatio();
 		for( int j = 0; j < height; ++j )
-			for( int i = 0; i < width; ++i )
-				raytracer->tracePixel(i,j);
+			for( int i = 0; i < width; ++i ){
+				// cout<< "wat\n";
+				raytracer->tracePixel(i,j); 
+			}
 
 		end=clock();
 

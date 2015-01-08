@@ -113,7 +113,9 @@ void Parser::parseCamera( Scene* scene )
         break;
 
       case ASPECTRATIO:
+        // std::cout << "case aspectratio\n";
         scene->getCamera().setAspectRatio( parseScalarExpression() );
+
         break;
 
       case VIEWDIR:
