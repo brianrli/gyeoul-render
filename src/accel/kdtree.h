@@ -38,7 +38,6 @@ public:
 	void build(std::vector<Geometry*> &prims, int& depth, KDnode* node);
 	KDnode *root;
 
-	std::vector<Geometry*> primitives;
 	int max_depth;
 };
 

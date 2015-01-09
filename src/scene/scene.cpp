@@ -157,7 +157,7 @@ bool Scene::intersect( const ray& r, isect& i ) const
 
 	if( !have_one )
 		i.setT(1000.0);
-
+ 
 	// if debugging,
 	intersectCache.push_back( std::make_pair(r,i) );
 
@@ -181,12 +181,24 @@ TextureMap* Scene::getTexture( string name )
 void Scene::buildkdtree(int depth){
 	giter g;
 	int i = 0;
-	std::cout << "begin\n";
 	for( g = objects.begin(); g != objects.end(); ++g ) {
-		std::cout << i << "\n";
 		i++;
 	}
-	std::cout << "end\n";
+	std::cout << i << "primitives detected\n";
 	
 	tree = new KDtree(&objects,depth);
+}
+
+BoundingBox BoundingBox::join(const BoundingBox &target)
+{
+ 
+	BoundingBox u;
+	u.min[0] = ((min[0] < target.min[0]) ? min[0] : target.min[0]);
+	u.min[1] = ((min[1] < target.min[1]) ? min[1] : target.min[1]);
+	u.min[2] = ((min[2] < target.min[2]) ? min[2] : target.min[2]);
+
+	u.max[0] = ((max[0] > target.max[0]) ? max[0] : target.max[0]);
+	u.max[1] = ((max[1] > target.max[1]) ? max[1] : target.max[1]);
+	u.max[2] = ((max[2] > target.max[2]) ? max[2] : target.max[2]);
+	return u;
 }

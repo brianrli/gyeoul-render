@@ -59,19 +59,8 @@ public:
 	bool intersect(const ray& r, double& tMin, double& tMax) const;
 
 	//======[ union of two bounding boxes ]======
-	BoundingBox join(const BoundingBox &target)
-	{	
-		BoundingBox u;
-		u.min[0] = ((min[0] < target.min[0]) ? min[0] : target.min[0]);
-		u.min[1] = ((min[1] < target.min[1]) ? min[1] : target.min[1]);
-		u.min[2] = ((min[2] < target.min[2]) ? min[2] : target.min[2]);
-
-		u.min[0] = ((max[0] < target.max[0]) ? max[0] : target.max[0]);
-		u.min[1] = ((max[1] < target.max[1]) ? max[1] : target.max[1]);
-		u.min[2] = ((max[2] < target.max[2]) ? max[2] : target.max[2]);
-		return u;
-	}
-
+	BoundingBox join(const BoundingBox &target);
+	
 	//======[ longest axis on a bounding box ]======
 	int longest_axis(){
 		int axis = 0;
