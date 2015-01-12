@@ -262,12 +262,8 @@ void DebuggingView::draw()
 		
 	}
 	
-	std::cout << "0\n";
 	if( m_showAxes )
 		drawAxes();
-
-	std::cout << "1\n";
-
 
 	if( raytracer == 0 || !raytracer->sceneLoaded() )
 		return;
@@ -275,21 +271,16 @@ void DebuggingView::draw()
 	if( m_showLights )
 		drawLights();
 
-	std::cout << "2\n";
 	if( m_showGeometry )
 	{
-		std::cout << "2\n";
 		lightScene();
-		std::cout << "2\n";
 		drawScene();
 	}
 
-	std::cout << "3\n";		
 	drawRays();
 
 	if( m_showCamera )
 		drawCamera();
-	std::cout << "4\n";
 }
 
 void DebuggingView::setRayTracer(RayTracer *tracer)
@@ -455,12 +446,9 @@ void DebuggingView::drawScene()
 		mat[3] = 1.0f;
 		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mat );
 	}
-	std::cout <<"swag\n";
 	raytracer->getScene();
-	std::cout <<"penis\n";
 	raytracer->getScene().glDraw(divisions, m_useSceneMaterials, 
 		m_useSceneTextures);
-	std::cout <<"death\n";
 }
 
 

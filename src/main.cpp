@@ -10,7 +10,7 @@ using namespace std;
 
 RayTracer* theRayTracer;
 TraceUI* traceUI;
-
+ 
 // usage : ray [option] in.ray out.bmp
 // Simply keying in ray will invoke a graphics mode version.
 // Use "ray --help" to see the detailed usage.

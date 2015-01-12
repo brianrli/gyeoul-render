@@ -15,7 +15,7 @@ bool Cylinder::intersectLocal( const ray& r, isect& i ) const
 			if( ii.t < i.t ) {
 				i = ii;
 				i.obj = this;
-			}
+			} 
 		}
 		return true;
 	} else {

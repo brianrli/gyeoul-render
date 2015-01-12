@@ -9,7 +9,7 @@ bool Cone::intersectLocal( const ray& r, isect& i ) const
 	bool ret = false;
 	const int x = 0, y = 1, z = 2;	// For the dumb array indexes for the vectors
 
-	Vec3d normal;
+	Vec3d normal; 
 	
 	Vec3d R0 = r.getPosition();
 	Vec3d Rd = r.getDirection();

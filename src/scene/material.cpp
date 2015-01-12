@@ -11,7 +11,7 @@ extern bool debugMode;
 // Apply the phong model to this point on the surface of the object, returning
 // the color of that point.
 Vec3d Material::shade( Scene *scene, const ray& r, const isect& i ) const
-{
+{ 
 	// YOUR CODE HERE
 
 	// For now, this method just returns the diffuse color of the object.

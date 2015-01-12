@@ -19,7 +19,7 @@ bool BoundingBox::intersects(const BoundingBox &target) const
 	return ((target.min[0] - RAY_EPSILON <= max[0]) && (target.max[0] + RAY_EPSILON >= min[0]) &&
 			(target.min[1] - RAY_EPSILON <= max[1]) && (target.max[1] + RAY_EPSILON >= min[1]) &&
 			(target.min[2] - RAY_EPSILON <= max[2]) && (target.max[2] + RAY_EPSILON >= min[2]));
-}
+} 
 
 // does the box contain this point?
 bool BoundingBox::intersects(const Vec3d& point) const
@@ -114,7 +114,7 @@ bool Geometry::hasBoundingBoxCapability() const
 	// boxes implemented for them.
 	
 	return false;
-}
+} 
 
 Scene::~Scene()
 {
@@ -174,7 +174,7 @@ TextureMap* Scene::getTexture( string name )
 	}
 	else
 	{
-		return (*itr).second;
+		return (*itr).second; 
 	}
 }
 

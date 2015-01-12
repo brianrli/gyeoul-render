@@ -10,7 +10,7 @@ namespace std
 	inline const _Tp& max(const _Tp& __a, const _Tp& __b) {
 	  return  __a < __b ? __b : __a;
 	}
-}
+} 
 #endif
 
 

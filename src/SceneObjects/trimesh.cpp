@@ -2,9 +2,9 @@
 #include <float.h>
 #include "trimesh.h"
 
-using namespace std;
+using namespace std; 
 extern bool debugMode;
- 
+  
 Trimesh::~Trimesh()
 {
 	for( Materials::iterator i = materials.begin(); i != materials.end(); ++i )
@@ -21,7 +21,7 @@ void Trimesh::addMaterial( Material *m )
 {
     materials.push_back( m );
 }
-
+ 
 void Trimesh::addNormal( const Vec3d &n )
 {
     normals.push_back( n );
@@ -29,7 +29,7 @@ void Trimesh::addNormal( const Vec3d &n )
 
 // Returns false if the vertices a,b,c don't all exist
 bool Trimesh::addFace( int a, int b, int c )
-{
+{ 
     int vcnt = vertices.size();
 
     if( a >= vcnt || b >= vcnt || c >= vcnt )
@@ -186,7 +186,7 @@ Trimesh::generateNormals()
 // Once you've loaded all the verts and faces, we can generate per
 // vertex normals by averaging the normals of the neighboring faces.
 {
-    int cnt = vertices.size();
+    int cnt = vertices.size(); 
     normals.resize( cnt );
     int *numFaces = new int[ cnt ]; // the number of faces assoc. with each vertex
     memset( numFaces, 0, sizeof(int)*cnt );

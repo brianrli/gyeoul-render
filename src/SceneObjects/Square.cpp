@@ -19,7 +19,7 @@ bool Square::intersectLocal( const ray& r, isect& i ) const
 
 	if( t <= RAY_EPSILON ) {
 		return false;
-	}
+	} 
 
 	Vec3d P = r.at( t );
 

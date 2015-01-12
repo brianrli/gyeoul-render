@@ -6,7 +6,7 @@
 using namespace std;
 
 Camera::Camera()
-{
+{ 
     aspectRatio = 1;
     normalizedHeight = 1;
     

@@ -8,11 +8,13 @@ KDtree::KDtree(std::vector<Geometry*> *prims,int d)
 	std::vector<Geometry*> objects = *prims;
 
 	int i = 0;
-	std::vector<Geometry*>::const_iterator g;
-	for( g = objects.begin(); g != objects.end(); ++g ) {
-		std::cout << i << "\n";
-		i++;
-	}
+	std::vector<Geometry*>::iterator g = objects.begin();
+	while(g != objects.end()) {
+         if(!(*g)->hasBoundingBoxCapability()) {
+            g = objects.erase(g);
+        }
+        else ++g;
+}
 
 	build(objects,max_depth,root);
 }
@@ -24,24 +26,26 @@ void KDtree::build(std::vector<Geometry*> &prims, int& depth, KDnode* node){
 	// std::vector<Geometry*> primitives(&prims);
 	node->primitives = prims;
 
-	std::cout << "KDtree::build\n";
+	// std::cout << "KDtree::build\n";
 	// std::cout << node->getBoundingBox()->min << "\n";
 	// std::cout << node->getBoundingBox()->max << "\n";
 
 	// primitives = prims;
 	//=====[make leaf]=====
-	if(depth == 0)
+	if(depth == 0){
+		// std::cout << "depth termination\n";
 		return;
+	}
 
 	//no primitives
 	std::cout << node->primitives.size() << "\n";
 	if(node->primitives.size() == 0){
-		std::cout << "terminate\n";
+		// std::cout << "terminate\n";
 		return;
 	}
 
 	if(node->primitives.size()==1){
-		std::cout << "terminate1\n";
+		// std::cout << "terminate1\n";
 		return;
 	}
 
@@ -53,26 +57,24 @@ void KDtree::build(std::vector<Geometry*> &prims, int& depth, KDnode* node){
 	//choose split position
 	node->axis = node->bbox->longest_axis();
 	int axis = node->axis;
-	std::cout << "axis is: " << axis << "\n";
+	// std::cout << "axis is: " << axis << "\n";
 
 	//for now, choose the midpoint of the longest axis
 	for(size_t i = 0; i < node->primitives.size(); i++){
 		BoundingBox b = node->primitives[i]->getBoundingBox();
-		std::cout << b.max << "\n";
-		std::cout << b.min << "\n";
-		std::cout << i << ": " << (b.max[axis]+b.min[axis])/2.0 << "\n";
 		node->split += (b.max[axis]+b.min[axis])/2.0;
 	}
 	node->split /= node->primitives.size();
-
-	std::cout << "split is: " << node->split << "\n";
 
 	std::vector<Geometry*> left_primitives;
 	std::vector<Geometry*> right_primitives;
 
 	//if left of midpoint
 	for(size_t i = 0; i < node->primitives.size(); i++){
-		if(node->primitives[i]->getBoundingBox().max[axis]<node->split){
+		double m = (node->primitives[i]->getBoundingBox().max[axis]+
+			node->primitives[i]->getBoundingBox().min[axis])/2.0;
+		// std::cout << "m: " << m << "\n";
+		if(m<node->split){
 			left_primitives.push_back(node->primitives[i]);
 		}
 		else{
@@ -80,10 +82,36 @@ void KDtree::build(std::vector<Geometry*> &prims, int& depth, KDnode* node){
 		}
 	}
 
+	//detect matches
+	if(left_primitives.size() == 0 && right_primitives.size() > 0){
+		left_primitives = right_primitives;
+	}
+	if(right_primitives.size() == 0 && left_primitives.size() > 0){
+		right_primitives = left_primitives;
+	}
+
+	double matches = 0.5;
+	int nmatches = 0;
+	for (size_t j = 0; j < left_primitives.size(); j++){
+		for (size_t k = 0; k < right_primitives.size(); k++){
+			if(left_primitives[j]==right_primitives[k])
+				nmatches++;
+		}
+	}
+
+	if(left_primitives.size()*matches < (double)nmatches || 
+		right_primitives.size()*matches < (double)nmatches){
+		std::cout << "match termination\n";
+		return;
+	}
+
+	std::cout << "left child " << left_primitives.size() << "matches\n";
+	std::cout << "right child " << right_primitives.size() << "matches\n";
+	std::cout << "\n";
+
 	depth--;
 	build(left_primitives, depth,node->left);
 	build(right_primitives, depth,node->right);
-	
 	return;
 }
 

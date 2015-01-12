@@ -82,6 +82,12 @@ public:
         
         localbounds.max = maximum( parent->vertices[ids[2]], localbounds.max);
 		localbounds.min = minimum( parent->vertices[ids[2]], localbounds.min);
+
+        // std::cout << "justin bieber: ";
+        // std::cout << parent->vertices[ids[0]] << " ";
+        // std::cout << parent->vertices[ids[1]] << " ";
+        // std::cout << parent->vertices[ids[2]] << " ";
+        // std::cout << localbounds.min << " " << localbounds.max << "\n" ;
         return localbounds;
     }
  };
