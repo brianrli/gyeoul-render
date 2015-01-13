@@ -9,12 +9,14 @@ KDtree::KDtree(std::vector<Geometry*> *prims,int d)
 
 	int i = 0;
 	std::vector<Geometry*>::iterator g = objects.begin();
+
+	//remove non bounding box geometry objects
 	while(g != objects.end()) {
          if(!(*g)->hasBoundingBoxCapability()) {
             g = objects.erase(g);
         }
         else ++g;
-}
+	}
 
 	build(objects,max_depth,root);
 }
@@ -23,36 +25,37 @@ KDtree::KDtree(std::vector<Geometry*> *prims,int d)
 //build tree
 void KDtree::build(std::vector<Geometry*> &prims, int& depth, KDnode* node){
 	
-	// std::vector<Geometry*> primitives(&prims);
+	//initialize primitives
 	node->primitives = prims;
+	node->left = new KDnode();
+	node->right = new KDnode();
+	
+	std::vector<Geometry*> left_primitives;
+	std::vector<Geometry*> right_primitives;
+	node->left->primitives = left_primitives;
+	node->right->primitives = right_primitives;
+	node->bbox = node->getBoundingBox();
 
 	// std::cout << "KDtree::build\n";
 	// std::cout << node->getBoundingBox()->min << "\n";
 	// std::cout << node->getBoundingBox()->max << "\n";
 
-	// primitives = prims;
 	//=====[make leaf]=====
 	if(depth == 0){
-		// std::cout << "depth termination\n";
 		return;
 	}
 
 	//no primitives
 	std::cout << node->primitives.size() << "\n";
 	if(node->primitives.size() == 0){
-		// std::cout << "terminate\n";
 		return;
 	}
 
 	if(node->primitives.size()==1){
-		// std::cout << "terminate1\n";
 		return;
 	}
 
 	//=====[ make interior node ]=====
-	node->left = new KDnode();
-	node->right = new KDnode();
-	node->bbox = node->getBoundingBox();
 
 	//choose split position
 	node->axis = node->bbox->longest_axis();
@@ -66,8 +69,6 @@ void KDtree::build(std::vector<Geometry*> &prims, int& depth, KDnode* node){
 	}
 	node->split /= node->primitives.size();
 
-	std::vector<Geometry*> left_primitives;
-	std::vector<Geometry*> right_primitives;
 
 	//if left of midpoint
 	for(size_t i = 0; i < node->primitives.size(); i++){
@@ -101,7 +102,6 @@ void KDtree::build(std::vector<Geometry*> &prims, int& depth, KDnode* node){
 
 	if(left_primitives.size()*matches < (double)nmatches || 
 		right_primitives.size()*matches < (double)nmatches){
-		std::cout << "match termination\n";
 		return;
 	}
 
@@ -109,10 +109,52 @@ void KDtree::build(std::vector<Geometry*> &prims, int& depth, KDnode* node){
 	std::cout << "right child " << right_primitives.size() << "matches\n";
 	std::cout << "\n";
 
+	//recurse
 	depth--;
 	build(left_primitives, depth,node->left);
 	build(right_primitives, depth,node->right);
 	return;
+}
+
+bool KDtree::intersect(const ray&r, isect&i){
+	// std::cout << "tree intersect\n";
+	bool have_one = false;
+	root->intersect(r,i,have_one);
+	// if(have_one){
+	// 	std::cout << i.t << "\n";
+	// }
+	return have_one;
+}
+
+bool KDnode::intersect(const ray&r, isect&i, bool&have_one){
+	// std::cout << "node intersect " << have_one << " " << primitives.size() << "\n";
+	double tMin, tMax;
+	isect cur;
+	// std::cout << "test bbox\n";
+	// std::cout << bbox->min << "\n";
+	// std::cout << bbox->max << "\n";
+	if(bbox->intersect(r,tMin,tMax)){
+		// std::cout << "leggo\n";
+		//interior node
+		if(left->primitives.size() > 0 || right->primitives.size() > 0 ){
+			left->intersect(r,i,have_one);
+			right->intersect(r,i,have_one);
+		}
+		//leaf node
+		else{
+			for (size_t j = 0; j < primitives.size(); j++){
+				if(primitives[j]->intersect(r,cur)){
+					if( !have_one || (cur.t < i.t) ) {
+						// std:m:cout << cur.t << " " << i.t << "\n";
+						i = cur;
+						have_one = true;
+					}
+				}
+			}
+		}
+	}
+	// std::cout << "exit\n\n";
+	return have_one;
 }
 
 //make sure kdtree nodes are individual

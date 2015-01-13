@@ -11,18 +11,17 @@ class BoundingBox;
 class KDnode{
 
 public:
+	//functions
 	KDnode();
 	~KDnode();
-	
+	bool intersect(const ray&r, isect&i, bool&have_one);
+	BoundingBox* getBoundingBox();
+
+	//members
 	BoundingBox *bbox;
-	
 	KDnode *left; //left child
 	KDnode *right; //right child
-	
 	vector<Geometry*> primitives; //geometry
-	
-	BoundingBox* getBoundingBox();
-	
 	float split;
 	int axis;		
 };
@@ -36,6 +35,7 @@ public:
 	~KDtree();
 
 	void build(std::vector<Geometry*> &prims, int& depth, KDnode* node);
+	bool intersect(const ray&r, isect&i);
 	KDnode *root;
 
 	int max_depth;

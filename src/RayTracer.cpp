@@ -154,7 +154,6 @@ Vec3d RayTracer::traceRay( const ray& r,
 		// No intersection.  This ray travels to infinity, so we color
 		// it according to the background color, which in this (simple) case
 		// is just black.
-
 		return Vec3d( 0.0, 0.0, 0.0 );
 	}
 }

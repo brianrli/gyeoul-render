@@ -78,10 +78,6 @@ bool BoundingBox::intersect(const ray& r, double& tMin, double& tMax) const
 
 bool Geometry::intersect(const ray&r, isect&i) const
 {
-	//test
-	// Vec3d s1 = transform->globalToLocalCoords(Vec3d( 0.0, 0.0, 1.0 ));
-	// std::cout << s1[0] << " " << s1[1] << " " << s1[2] << "\n";
-    
     // Transform the ray into the object's local coordinate space
     Vec3d pos = transform->globalToLocalCoords(r.getPosition());
     Vec3d dir = transform->globalToLocalCoords(r.getPosition() + r.getDirection()) - pos;
@@ -141,27 +137,39 @@ Scene::~Scene()
 // intersection through the reference parameter.
 bool Scene::intersect( const ray& r, isect& i ) const
 {
-	typedef vector<Geometry*>::const_iterator iter;
+	bool accel = true;
+	if(!accel){
+		typedef vector<Geometry*>::const_iterator iter;
 
-	bool have_one = false;
+		bool have_one = false;
 
-	for( iter j = objects.begin(); j != objects.end(); ++j ) {
-		isect cur;
-		if( (*j)->intersect( r, cur ) ) {
-			if( !have_one || (cur.t < i.t) ) {
-				i = cur;
-				have_one = true;
+		for( iter j = objects.begin(); j != objects.end(); ++j ) {
+			isect cur;
+			if( (*j)->intersect( r, cur ) ) {
+				if( !have_one || (cur.t < i.t) ) {
+					i = cur;
+					have_one = true;
+				}
 			}
 		}
+
+		if( !have_one )
+			i.setT(1000.0);
+	 
+		// if debugging,
+		intersectCache.push_back( std::make_pair(r,i) );
+		return have_one;
 	}
+	else{
+		bool have_one = false;
+		have_one = tree->intersect(r,i);
+		if(!have_one )
+			i.setT(1000.0);
+		// if debugging,
+		intersectCache.push_back( std::make_pair(r,i) );
+		return have_one;
 
-	if( !have_one )
-		i.setT(1000.0);
- 
-	// if debugging,
-	intersectCache.push_back( std::make_pair(r,i) );
-
-	return have_one;
+	}
 }
 
 TextureMap* Scene::getTexture( string name )
@@ -181,11 +189,10 @@ TextureMap* Scene::getTexture( string name )
 void Scene::buildkdtree(int depth){
 	giter g;
 	int i = 0;
-	for( g = objects.begin(); g != objects.end(); ++g ) {
-		i++;
-	}
-	std::cout << i << "primitives detected\n";
-	
+	// for( g = objects.begin(); g != objects.end(); ++g ) {
+	// 	i++;
+	// }
+	// std::cout << i << "primitives detected\n";
 	tree = new KDtree(&objects,depth);
 }
 
