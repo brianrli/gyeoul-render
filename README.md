@@ -6,4 +6,4 @@ An in-progress ray tracer based on the midterm assignment for Yale University's 
 - [x] Whitted Style Ray-Tracing
 - [x] Phong Normal Interpolation Shading
 - [x] Anti-Aliasing, Super Sampling
-- [ ] Acceleration, KD Tree
+- [x] Acceleration, KD Tree
