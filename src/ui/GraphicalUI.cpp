@@ -94,7 +94,6 @@ void GraphicalUI::cb_about(Fl_Menu_* o, void* v)
 
 void GraphicalUI::cb_sizeSlides(Fl_Widget* o, void* v)
 {
-	std::cout << "cb_sizeSlides\n";
 	GraphicalUI* pUI=(GraphicalUI*)(o->user_data());
 
 	// terminate the rendering so we don't get crashes

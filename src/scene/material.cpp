@@ -114,7 +114,26 @@ Vec3d TextureMap::getMappedValue( const Vec2d& coord ) const
     // and use these to perform bilinear interpolation
     // of the values.
 
-    return Vec3d(1.0, 1.0, 1.0);
+    // std::cout << "balling\n";
+    double u = coord[0];
+    double v = coord[1];
+    double nx = width;
+    double ny = height;
+    double i = floor(u*nx);
+    double j = floor(v*ny);
+    double up = (nx*u) - floor(nx*u);
+    double vp = (nx*u) - floor(nx*u);
+
+    // std::cout << u << " " << v << " " << nx << " " << ny << "\n";
+    // std::cout << i << " " << j << " " << up << " " << vp << "\n";
+
+    //bilinear interpolation
+    Vec3d color =((1-up)* (1-vp) * getPixelAt(i,j))
+    + (up*(1-vp)*getPixelAt(i+1,j))
+    + ((1-up)*vp*getPixelAt(i,j+1))
+    + (up*vp*getPixelAt(i+1,j+1));
+    // std::cout << color << "\n\n";
+    return color;
 }
 
 
@@ -139,8 +158,9 @@ Vec3d TextureMap::getPixelAt( int x, int y ) const
 
 Vec3d MaterialParameter::value( const isect& is ) const
 {
-    if( 0 != _textureMap )
+    if( 0 != _textureMap ){
         return _textureMap->getMappedValue( is.uvCoordinates );
+    }
     else
         return _value;
 }

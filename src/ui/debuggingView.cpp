@@ -107,7 +107,6 @@ DebuggingView::DebuggingView(int x, int y, int w, int h,char *label)
 	  m_showVisibilityRays(true), m_showReflectionRays(true),
 	  m_showRefractionRays(true), m_showShadowRays(false)
 {
-	std::cout << "what\n";
     m_camera = new ModelerCamera();
 }
 

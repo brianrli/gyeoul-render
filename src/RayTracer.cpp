@@ -179,7 +179,6 @@ void RayTracer::getBuffer( unsigned char *&buf, int &w, int &h )
 
 double RayTracer::aspectRatio()
 {
-	std::cout << "Aspect Ratio "<<scene->getCamera().getAspectRatio() << "\n";
 	return sceneLoaded() ? scene->getCamera().getAspectRatio() : 1;
 }
 
@@ -287,7 +286,7 @@ void RayTracer::tracePixel( int i, int j )
 
 	if(antialias){
 		double arr[8];
-		int depth = 1;
+		int depth = 4;
 		int a = pow(double(2),depth-1);
 
 		for (int q = i*a; q < i*a+depth; q++){

@@ -139,6 +139,19 @@ bool Box::intersectLocal( const ray& r, isect& i ) const
 	Vec3d normal = Vec3d(0.0,0.0,0.0);
 	normal[axis] = (d[axis]>0.0) ? -1.0 : 1.0;
 
+
+	//texture mapping
+	Vec3d h = r.at(t);
+	int u,v;
+	switch (axis)
+	{
+		case 0: u = 1; v = 2;
+		case 1: u = 0; v = 2;
+		case 2: u = 0; v = 1;
+	}
+	i.setUVCoordinates(Vec2d(h[u] + 0.5, h[v] + 0.5));
+
+
 	i.obj = this;
 	i.t = t;
 	i.N = normal;

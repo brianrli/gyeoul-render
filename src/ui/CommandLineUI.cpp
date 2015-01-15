@@ -43,7 +43,6 @@ CommandLineUI::CommandLineUI( int argc, char** argv )
 
 	}
 
-	cout << "out of loop\n";
 	// std::cout << optind << " " << argc << "\n";
 	if( optind >= argc-1 )
 	{

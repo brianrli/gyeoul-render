@@ -46,7 +46,6 @@ void KDtree::build(std::vector<Geometry*> &prims, int& depth, KDnode* node){
 	}
 
 	//no primitives
-	std::cout << node->primitives.size() << "\n";
 	if(node->primitives.size() == 0){
 		return;
 	}
@@ -105,9 +104,9 @@ void KDtree::build(std::vector<Geometry*> &prims, int& depth, KDnode* node){
 		return;
 	}
 
-	std::cout << "left child " << left_primitives.size() << "matches\n";
-	std::cout << "right child " << right_primitives.size() << "matches\n";
-	std::cout << "\n";
+	// std::cout << "left child " << left_primitives.size() << "matches\n";
+	// std::cout << "right child " << right_primitives.size() << "matches\n";
+	// std::cout << "\n";
 
 	//recurse
 	depth--;
