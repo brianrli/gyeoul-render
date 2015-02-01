@@ -71,11 +71,6 @@ Vec3d RayTracer::traceRay( const ray& r,
 
 	if(scene->intersect( r, i )){
 
-		// std::cout << i.t << "\n";
-		// while(1){
-			// int stall = 0;
-		// }
-
 		const Material& m = i.getMaterial();
 		I = m.shade(scene, r, i);
 		
@@ -86,7 +81,6 @@ Vec3d RayTracer::traceRay( const ray& r,
 			//new direction
 			Vec3d refl = d - (2*(d*i.N)*i.N);
 			refl.normalize();
-
 
 			//reflectance ray
 			ray refl_ray(r.at(i.t), refl, ray::REFLECTION);
@@ -108,6 +102,7 @@ Vec3d RayTracer::traceRay( const ray& r,
 
 		//=====[ Refraction ]=====
 		if(refr_depth!=0){
+			
 			//test if dielectric
 			if(m.index(i) > 1.0 || r.type()==ray::REFRACTION){
 
@@ -150,11 +145,9 @@ Vec3d RayTracer::traceRay( const ray& r,
 		if(debugMode)
 			std::cout << "[return radiance] " << I << "\n";
 		return I;
-	} else {
-		// No intersection.  This ray travels to infinity, so we color
-		// it according to the background color, which in this (simple) case
-		// is just black.
-		return Vec3d( 0.0, 0.0, 0.0 );
+	} else 
+	{
+		return Vec3d( 0.0, 0.0, 0.0 ); //return background color
 	}
 }
 

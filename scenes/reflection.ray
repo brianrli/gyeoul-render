@@ -37,7 +37,7 @@ point_light {
 	quadratic_attenuation_coeff = 0.000045492;	
 }
 
- translate(-1,0,0,
+ translate(1,0,0,
  	scale(0.8,
 		sphere { 
 			material = { 

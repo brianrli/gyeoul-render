@@ -3,6 +3,17 @@ SBT-raytracer 1.0
 camera { fov=30; }
 
 directional_light { direction=(-1,-1,-1); color=(0.7,0.7,0.7); }
+directional_light { direction=(1,-1,-1); color=(0.7,0.7,0.7); }
+
+// Sphere acts as a lens
+translate(0,0,-5,
+    scale(1, 1, 1, sphere {
+        material = { 
+            diffuse = (0, 0.12, 0);
+            transmissive = (0.7, 0.7, 0.7);
+            index = 1.5;
+        }
+    }))
 
 transform(
     (1.000000,0.000000,0.000000,0.000000),

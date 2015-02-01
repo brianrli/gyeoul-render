@@ -17,7 +17,7 @@ bool Sphere::intersectLocal( const ray& r, isect& i ) const
 
 	discriminant = sqrt( discriminant );
 	double t2 = b + discriminant;
- 
+	 
 	if( t2 <= RAY_EPSILON ) {
 		return false;
 	}

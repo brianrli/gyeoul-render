@@ -138,6 +138,7 @@ Scene::~Scene()
 bool Scene::intersect( const ray& r, isect& i ) const
 {
 	bool accel = true;
+	
 	if(!accel){
 		typedef vector<Geometry*>::const_iterator iter;
 

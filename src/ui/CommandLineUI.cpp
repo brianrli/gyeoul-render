@@ -8,7 +8,8 @@
 #include "../fileio/bitmap.h"
 
 #include "../RayTracer.h"
-#include "getopt.h"
+// #include "getopt.h"
+#include <unistd.h>""
 
 using namespace std;
 
@@ -18,45 +19,76 @@ using namespace std;
 CommandLineUI::CommandLineUI( int argc, char** argv )
 	: TraceUI()
 {
-	int i;
+	int c;
 
 	progName=argv[0];
 	// std::cout << progName << "\n";
+	// opterr = 0;
 
-	while( (i = getopt( argc, argv, "tr:w:h:" )) != EOF )
-	{
-		switch( i )
-		{
+	// for (int i = 0; i < argc ;i++){
+	// 	std::cout << argv[i] << " ";
+	// }
+	// while( (i = getopt( argc, argv, "t:er:w:h:" )) != EOF )
+	// {
+	// 	switch( i )
+	// 	{
+	// 		case 'r':
+	// 			m_nDepth = atoi( optarg );
+	// 			break;
+
+	// 		case 'w':
+	// 			std::cout << "case w\n";
+	// 			if(optarg == NULL)
+	// 				std::cout << "drank\n";
+	// 			std::cout << "weeknd\n";
+	// 			m_nSize = atoi( optarg );
+	// 			std::cout << m_nSize << "\n";
+	// 			break;
+	// 		default:
+	// 		// Oops; unknown argument
+	// 		std::cerr << "Invalid argument: '" << i << "'." << std::endl;
+	// 		usage();
+	// 		exit(1);
+	// 	}
+
+	// }
+
+	int aflag = 0;
+	int bflag = 0;
+	// int c;
+	char *cvalue = NULL;
+	std::cout << "opt index: " << optind << "\n";
+	while ((c = getopt (argc, argv, "w:r:")) != -1){
+		switch (c)
+			{
 			case 'r':
-				m_nDepth = atoi( optarg );
+				m_nDepth = atoi(optarg);
 				break;
-
+			
 			case 'w':
-				m_nSize = atoi( optarg );
+				m_nSize = atoi(optarg);
 				break;
+
 			default:
-			// Oops; unknown argument
-			std::cerr << "Invalid argument: '" << i << "'." << std::endl;
-			usage();
-			exit(1);
-		}
-
+				std::cerr << "Invalid argument: '" << c << "'." << std::endl;
+				usage();
+				exit(1);
+			}
 	}
+	std::cout << "Depth: " << m_nDepth << " Width: " << m_nSize <<"\n";
+	std::cout << "opt index: " << optind << "\n";
+	std::cout << argv[optind] << "\n";
+	std::cout << "******************************\n";
 
-	// std::cout << optind << " " << argc << "\n";
-	if( optind >= argc-1 )
-	{
+
+	if( optind >= argc-1 ){
 		std::cerr << "no input and/or output name." << std::endl;
 		exit(1);
 	}
 
-	//old
-	// rayName = argv[optind];
-	// imgName = argv[optind+1];
-
 	//new
-	rayName = argv[optind+1];
-	imgName = argv[optind+2];
+	rayName = argv[optind];
+	imgName = argv[optind+1];
 }
 
 int CommandLineUI::run()
@@ -67,7 +99,7 @@ int CommandLineUI::run()
 	raytracer->loadScene( rayName );
 	// raytracer->setDepth(m_nDepth);
 	raytracer->setDepth(3);
-	std::cout<<"set depth to: " << m_nDepth << "\n";
+	// std::cout<<"set depth to: " << m_nDepth << "\n";
 
 	if( raytracer->sceneLoaded() )
 	{
@@ -79,10 +111,9 @@ int CommandLineUI::run()
 		clock_t start, end;
 		start = clock(); 
 
-		cout << raytracer->aspectRatio();
 		for( int j = 0; j < height; ++j )
-			for( int i = 0; i < width; ++i ){
-				// cout<< "wat\n";
+			for( int i = 0; i < width; ++i )
+			{
 				raytracer->tracePixel(i,j); 
 			}
 
@@ -90,7 +121,6 @@ int CommandLineUI::run()
 
 		// save image
 		unsigned char* buf;
-
 		raytracer->getBuffer(buf, width, height);
 
 		if (buf)
